@@ -14,6 +14,7 @@
 </div>
 <div class="d-flex justify-content-between mt-5">
     <div class="text-danger"><strong>Created: {{ $project->created_at }}</strong></div>
+    <div class="text-success"><strong>Category: {{ $project->category->label }}</strong></div>
     <div class="text-danger"><strong>Updated: {{ $project->updated_at }}</strong></div>   
 </div>
 <hr>

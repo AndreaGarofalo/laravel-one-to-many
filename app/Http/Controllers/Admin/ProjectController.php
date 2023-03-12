@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
@@ -28,8 +29,8 @@ class ProjectController extends Controller
     public function create()
     {
         $project = new Project();
-
-        return view('admin.projects.create', compact('project'));
+        $categories = Category::orderBy('label')->get();
+        return view('admin.projects.create', compact('project', 'categories'));
     }
 
     /**
@@ -41,6 +42,7 @@ class ProjectController extends Controller
             'title' => 'required|string|unique:projects|min:5|max:20',
             'description' => 'required|string',
             'screen' => 'nullable|image|mimes:jpeg,jpg,png',
+            'category_id' => 'nullable|exists:categories,id'
         ],[
             'title.required' => 'Title is mandatory',
             'title.unique' => 'Title has to be different from other projects',
@@ -49,6 +51,7 @@ class ProjectController extends Controller
             'description.required' => 'Description is mandatory',
             'screen.image' => 'Image has to be an image file',
             'screen.mimes' => 'Image extension accepted are: jpeg, jpg, png',
+            'category_id' => 'Category not valid'
         ]);
 
         $data = $request->all();
@@ -82,7 +85,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $categories = Category::orderBy('label')->get();
+        return view('admin.projects.edit', compact('project', 'categories'));
     }
 
     /**
@@ -95,6 +99,7 @@ class ProjectController extends Controller
             'title' => ['required', 'string', Rule::unique('projects')->ignore($project->id), 'min:5', 'max:20'],
             'description' => 'required|string',
             'screen' => 'nullable|image|mimes:jpeg,jpg,png',
+            'category_id' => 'nullable|exists:categories,id'
         ],[
             'title.required' => 'Title is mandatory',
             'title.unique' => 'Title has to be different from other projects',
@@ -103,6 +108,7 @@ class ProjectController extends Controller
             'description.required' => 'Description is mandatory',
             'screen.image' => 'Image has to be an image file',
             'screen.mimes' => 'Image extension accepted are: jpeg, jpg, png',
+            'category_id' => 'Category not valid'
         ]);
 
         $data = $request->all();

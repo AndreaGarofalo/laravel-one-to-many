@@ -29,11 +29,24 @@
                     <input type="text" class="form-control" id="slug" name="slug" value="{{ Str::slug(old('title', $project->title), '-') }}" disabled>
                 </div>
             </div>
-            <div class="col-md-12">
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-4">
+                <label for="category_id" class="form-label">Category</label>
+                <select class="form-select @error('category_id') is-invalid @enderror" aria-label="Default select example" name="category_id" id="category_id">
+                    <option value="">No category</option>
+                    @foreach ($categories as $category)
+                        <option @if(old('category_id', $project->category_id) == $category->id) selected @endif  value="{{ $category->id }}">{{ $category->label }}</option>
+                    @endforeach
+                </select>
+                @error('category_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="col-md-8">
                 <div class="mb-3">
                     <label for="screen" class="form-label">Screen</label>
                     <input type="file" class="form-control" id="screen" name="screen" >
-
                 </div>
             </div>
         </div>
